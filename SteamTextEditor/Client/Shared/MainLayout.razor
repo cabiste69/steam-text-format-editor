@@ -1,17 +1,54 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
+@*<div class="page">
     <div class="sidebar">
-        <NavMenu />
+    <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+    <div class="top-row px-4">
+    <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
+    <article class="content px-4">
+    @Body
+    </article>
     </main>
-</div>
+    </div>*@
+
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudText Typo="Typo.h5" Class="ml-3">Steam text editor</MudText>
+        <MudSpacer />
+        <MudTooltip Text="Switch to Dark/Light theme" Arrow="true">
+            <MudIconButton Icon="@_activeThemeIcon" Color="Color.Inherit" Edge="Edge.End" OnClick="SwitchTheme" />
+        </MudTooltip>
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Edge="Edge.End" Href="https://github.com/cabiste69/steam-text-format-editor.git" Target="_blank"/>
+    </MudAppBar>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+
+@code {
+    private MudTheme _theme = new();
+    private bool _isDarkMode = true;
+    private string _activeThemeIcon = Icons.Filled.Bedtime;
+    void SwitchTheme()
+    {
+        _isDarkMode = !_isDarkMode;
+        if (_isDarkMode)
+        {
+            _activeThemeIcon = Icons.Filled.WbSunny;
+        }
+        else
+        {
+            _activeThemeIcon = Icons.Filled.Bedtime;
+        }
+    }
+}
