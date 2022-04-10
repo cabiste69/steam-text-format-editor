@@ -11,7 +11,7 @@
     </MudPaper>*@
 
 <MudPaper Square="true" Class="pa-16 ma-2">
-    <MudTextField T="string" Label="Multiline" Variant="Variant.Text" Lines="5" @bind-Text="InputText" />
+    <MudTextField Immediate="true" T="string" Label="Multiline" Variant="Variant.Text" Lines="5" @bind-Text="InputText" />
 </MudPaper>
 <MudDivider Vertical="true" FlexItem="true" />
 @((MarkupString)_outputText)
@@ -59,16 +59,19 @@
         set
         {
             _inputText = value;
-            _wipText = value;
+            _wipText = value.Trim();
             ConvertToHtml();
         }
     }
 
     void ConvertToHtml()
     {
-        foreach (string key in steamMarkup.Keys)
+        if (_wipText != "")
         {
-            _wipText = _wipText.Replace(key, steamMarkup[key]);
+            foreach (string key in steamMarkup.Keys)
+            {
+                _wipText = _wipText.Replace(key, steamMarkup[key]);
+            }
         }
 
         _outputText = _wipText;
