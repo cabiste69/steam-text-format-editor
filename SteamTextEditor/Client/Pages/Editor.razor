@@ -1,7 +1,76 @@
 ﻿@page "/"
 
-<h3>Editor</h3>
 
+<EditorBar />@*
+    <MudPaper Square="true" Class="d-flex justify-space-around">
+    <MudTextField @bind-Value="AnimationEntrance" Label="Entrance Class (copy and paste from style tag)" />
+    </MudPaper>
+    <MudDivider Vertical="true" FlexItem="true" />
+    <MudPaper Square="true" Class="d-flex justify-space-around">
+    <MudTextField @bind-Value="AnimationEntrance" Label="Entrance Class (copy and paste from style tag)" />
+    </MudPaper>*@
+
+<MudPaper Square="true" Class="pa-16 ma-2">
+    <MudTextField T="string" Label="Multiline" Variant="Variant.Text" Lines="5" @bind-Text="InputText" />
+</MudPaper>
+<MudDivider Vertical="true" FlexItem="true" />
+@((MarkupString)_outputText)
 @code {
+    Dictionary<string, string> steamMarkup = new Dictionary<string, string>()
+    {
+        {"[h1]", "<h1>"},
+        {"[/h1]", "</h1>"},
+        {"[b]", "<b>"},
+        {"[/b]", "</b>"},
+        {"[u]", "<u>"},
+        {"[/u]", "</u>"},
+        {"[i]", "<i>"},
+        {"[/i]", "</i>"},
+        {"[strike]", "<del>"},
+        {"[/strike]", "</del>"},
+        //list stuff
+        {"[list]", "<ul>"},
+        {"[/list]", "</ul>"},
+        {"[olist]", "<ol>"},
+        {"[/olist]", "</ol>"},
+        {"[*]", "<li>"},
+        //list end
+        {"[code]", "<code class=\"codeblock\">"},
+        {"[/code]", "</code>"},
+        //table stuff
+        {"[table]","<table border='1'>"},
+        {"[/table]", "</table>"},
+        {"[tr]", "<tr>"},
+        {"[/tr]", "</tr>"},
+        {"[th]", "<th>"},
+        {"[/th]", "</th>"},
+        {"[td]", "<td>"},
+        {"[/td]", "</td>"}
+    };
+    private string _inputText;
+    private string _outputText;
+    private string _wipText;
+    public string InputText
+    {
+        get
+        {
+            return _inputText;
+        }
+        set
+        {
+            _inputText = value;
+            _wipText = value;
+            ConvertToHtml();
+        }
+    }
 
+    void ConvertToHtml()
+    {
+        foreach (string key in steamMarkup.Keys)
+        {
+            _wipText = _wipText.Replace(key, steamMarkup[key]);
+        }
+
+        _outputText = _wipText;
+    }
 }
