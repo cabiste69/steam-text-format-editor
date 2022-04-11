@@ -1,9 +1,47 @@
 ﻿@page "/sss"
 
-<PageTitle>Index</PageTitle>
+<head>
+    <style>
+        #inputText {
+            width: 50%;
+            float: left;
+        }
 
-<h1>Hello, world!</h1>
+        #outputText {
+            width: 50%;
+            float: right;
+        }
 
-Welcome to your new app.
+    </style>
+</head>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<div id="inputText">
+    <MudPaper Class="pa-16 ma-2" Outlined="true">
+
+        <MudTextField Immediate="true" T="string" Variant="Variant.Text" Lines="5" />
+    </MudPaper>
+
+</div>
+
+<div id="outputText">
+    <MudPaper Class="pa-16 ma-2" Outlined="true">
+        <ul>
+            <li>Coffee</li>
+            <li>Tea</li>
+            <li>Milk</li>
+        </ul>
+    </MudPaper>
+
+</div>
+
+<div>
+
+    -this is a simple Unordered html list
+    <ul>
+        <li>Coffee</li>
+        <li>Tea</li>
+        <li>Milk</li>
+    </ul>
+
+
+</div>

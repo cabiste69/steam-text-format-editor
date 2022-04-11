@@ -1,24 +1,58 @@
 ﻿@page "/"
 
+<head>
+    <style>
+        #inputText {
+            width: 50%;
+            float: left;
+            padding-left: 10px;
+            padding-top: 10px;
+        }
 
-<EditorBar />@*
+        #outputText {
+            width: 50%;
+            float: right;
+        }
+
+        .steamBlue {
+            background-color: #1c2738;
+        }
+
+        .black {
+            background-color: black;
+            /*padding-top: 16px;*/
+        }
+    </style>
+</head>
+
+<EditorBar />
+@*
     <MudPaper Square="true" Class="d-flex justify-space-around">
     <MudTextField @bind-Value="AnimationEntrance" Label="Entrance Class (copy and paste from style tag)" />
     </MudPaper>
     <MudDivider Vertical="true" FlexItem="true" />
     <MudPaper Square="true" Class="d-flex justify-space-around">
     <MudTextField @bind-Value="AnimationEntrance" Label="Entrance Class (copy and paste from style tag)" />
-    </MudPaper>*@
+    </MudPaper>
+*@
 
-<MudPaper Square="true" Class="pa-16 ma-2">
-    <MudTextField Immediate="true" T="string" Label="Multiline" Variant="Variant.Text" Lines="5" @bind-Text="InputText" />
-</MudPaper>
-<MudDivider Vertical="true" FlexItem="true" />
-@((MarkupString)_outputText)
+
+<!--Make the text field take the full container area-->
+<div id="inputText">
+    <MudPaper Class="pt-8 pl-8 pb-0 black" Elevation="0" MinHeight="800px">
+        <MudTextField Immediate="true" T="string" Variant="Variant.Text" @bind-Text="InputText" FullWidth="true" Lines="_inputHeight" DisableUnderLine="true" />
+    </MudPaper>
+</div>
+
+<div id="outputText">
+    <MudPaper Class="pa-16 ma-2 steamBlue" Outlined="true" Height="@(_outputHeight+"px")" MinHeight="800px">
+        @((MarkupString)_outputText)
+    </MudPaper>
+</div>
 @code {
     Dictionary<string, string> steamMarkup = new Dictionary<string, string>()
     {
-        {"[h1]", "<h1>"},
+        {"[h1]", "<hr><h1>"},
         {"[/h1]", "</h1>"},
         {"[b]", "<b>"},
         {"[/b]", "</b>"},
@@ -29,8 +63,8 @@
         {"[strike]", "<del>"},
         {"[/strike]", "</del>"},
         //list stuff
-        {"[list]", "<ul>"},
-        {"[/list]", "</ul>"},
+        {"[list]", ""},
+        {"[/list]", ""},
         {"[olist]", "<ol>"},
         {"[/olist]", "</ol>"},
         {"[*]", "<li>"},
@@ -45,11 +79,14 @@
         {"[th]", "<th>"},
         {"[/th]", "</th>"},
         {"[td]", "<td>"},
-        {"[/td]", "</td>"}
+        {"[/td]", "</td>"},
+        {"\n", "<br />"}
     };
-    private string _inputText;
-    private string _outputText;
-    private string _wipText;
+    private int _inputHeight = 10;
+    private string _inputText = "this is a website to preview steam text format in an easy way \n for the list of the available markup tags go here \n https://steamcommunity.com/comment/Guide/formattinghelp \n and as you can see this is still a work in progress";
+    private string _outputHeight = "35";
+    private string _outputText = "";
+    private string _wipText = "";
     public string InputText
     {
         get
@@ -59,21 +96,25 @@
         set
         {
             _inputText = value;
-            _wipText = value.Trim();
+            _wipText = value;
+            CountLines();
             ConvertToHtml();
         }
     }
 
     void ConvertToHtml()
     {
-        if (_wipText != "")
+        foreach (string key in steamMarkup.Keys)
         {
-            foreach (string key in steamMarkup.Keys)
-            {
-                _wipText = _wipText.Replace(key, steamMarkup[key]);
-            }
+            _wipText = _wipText.Replace(key, steamMarkup[key]);
         }
 
-        _outputText = _wipText;
+        _outputText = _wipText.Trim();
+    }
+
+    void CountLines()
+    {
+        _inputHeight = 3 + _inputText.Split("\n").Length;
+        _outputHeight = ((_inputHeight * 19) + 35).ToString();
     }
 }
